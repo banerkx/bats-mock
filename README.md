@@ -1,3 +1,20 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**README.md Table Of Contents**
+
+- [bats-mock](#bats-mock)
+  - [Installation](#installation)
+    - [git](#git)
+    - [npm](#npm)
+  - [Usage](#usage)
+    - [Stubbing](#stubbing)
+    - [Unstubbing](#unstubbing)
+  - [How it works](#how-it-works)
+    - [Caveat](#caveat)
+  - [Credits](#credits)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # bats-mock
 
 Mocking/stubbing library for [BATS (Bash Automated Testing System)][bats-core]
@@ -136,11 +153,11 @@ as the function will shadow the binstub script on the `PATH`.
 
 ## Credits
 
-Extracted from the [ruby-build][] test suite.
+Extracted from the [ruby-build] test suite.
 Many thanks to its author and contributors:
 [Sam Stephenson][sstephenson] and [Mislav Marohnić][mislav].
 
+[bats-core]: https://github.com/bats-core
+[mislav]: https://github.com/mislav
 [ruby-build]: https://github.com/sstephenson/ruby-build
 [sstephenson]: https://github.com/sstephenson
-[mislav]: https://github.com/mislav
-[bats-core]: https://github.com/bats-core
