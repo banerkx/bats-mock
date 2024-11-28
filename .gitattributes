@@ -36,7 +36,6 @@ binstub  text eol=cr
 ################################################################################
 # The following text file extensions should have Windows line endings.         #
 ################################################################################
-Vagrantfile text eol=cr
 
 ################################################################################
 # The following files are binary.                                              #
