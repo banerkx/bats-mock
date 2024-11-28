@@ -1,14 +1,16 @@
 # shellcheck shell=bash
 
+# NOTE: The variable BATS_TMPDIR is defined by BATS (so not defined here).
+# shellcheck disable=SC2154
 BATS_MOCK_TMPDIR="${BATS_TMPDIR}"
 BATS_MOCK_BINDIR="${BATS_MOCK_TMPDIR}/bin"
 
-PATH="$BATS_MOCK_BINDIR:$PATH"
+PATH="${BATS_MOCK_BINDIR}:${PATH}"
 
 stub() {
   local program="$1"
   local prefix
-  prefix="$(echo "$program" | tr a-z- A-Z_)"
+  prefix="$(echo "${program}" | tr a-z- A-Z_)"
   shift
 
   export "${prefix}_STUB_PLAN"="${BATS_MOCK_TMPDIR}/${program}-stub-plan"
@@ -19,13 +21,13 @@ stub() {
   ln -sf "${BASH_SOURCE[0]%stub.bash}binstub" "${BATS_MOCK_BINDIR}/${program}"
 
   touch "${BATS_MOCK_TMPDIR}/${program}-stub-plan"
-  for arg in "$@"; do printf "%s\n" "$arg" >> "${BATS_MOCK_TMPDIR}/${program}-stub-plan"; done
+  for arg in "$@"; do printf "%s\n" "${arg}" >> "${BATS_MOCK_TMPDIR}/${program}-stub-plan"; done
 }
 
 stub_repeated() {
   local program="$1"
   # shellcheck disable=SC2155
-  local prefix="$(echo "$program" | tr a-z- A-Z_)"
+  local prefix="$(echo "${program}" | tr a-z- A-Z_)"
   export "${prefix}_STUB_NOINDEX"=1
   stub "$@"
 }
@@ -33,15 +35,15 @@ stub_repeated() {
 unstub() {
   local program="$1"
   local prefix
-  prefix="$(echo "$program" | tr a-z- A-Z_)"
+  prefix="$(echo "${program}" | tr a-z- A-Z_)"
   local path="${BATS_MOCK_BINDIR}/${program}"
 
   export "${prefix}_STUB_END"=1
 
   local STATUS=0
-  "$path" || STATUS="$?"
+  "${path}" || STATUS="${?}"
 
-  rm -f "$path"
+  rm -f "${path}"
   rm -f "${BATS_MOCK_TMPDIR}/${program}-stub-plan" "${BATS_MOCK_TMPDIR}/${program}-stub-run"
-  return "$STATUS"
+  return "${STATUS}"
 }
