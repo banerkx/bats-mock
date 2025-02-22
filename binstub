@@ -3,7 +3,7 @@ set -e
 
 status=127
 program="${0##*/}"
-PROGRAM="$(echo "$program" | tr a-z- A-Z_)"
+PROGRAM="$(echo "${program}" | tr a-z- A-Z_)"
 
 _STUB_PLAN="${PROGRAM}_STUB_PLAN"
 _STUB_RUN="${PROGRAM}_STUB_RUN"
@@ -14,7 +14,7 @@ _STUB_END="${PROGRAM}_STUB_END"
 _STUB_DEBUG="${PROGRAM}_STUB_DEBUG"
 
 if [ -n "${!_STUB_DEBUG}" ]; then
-  echo "$program" "$@" >&${!_STUB_DEBUG}
+  echo "${program}" "$@" >&${!_STUB_DEBUG}
 fi
 
 [ -e "${!_STUB_PLAN}" ] || exit 1
@@ -31,12 +31,12 @@ inspect_args() {
   local arg
   local sep=''
   for arg; do
-    if [[ $arg == *' '* ]]; then
-      printf '%s"%s"' "$sep" "${arg//\"/\\\"}"
-    elif [[ $arg == *'"'* ]]; then
-      printf "%s'%s'" "$sep" "$arg"
+    if [[ ${arg} == *' '* ]]; then
+      printf '%s"%s"' "${sep}" "${arg//\"/\\\"}"
+    elif [[ ${arg} == *'"'* ]]; then
+      printf "%s'%s'" "${sep}" "${arg}"
     else
-      printf '%s%s' "$sep" "$arg"
+      printf '%s%s' "${sep}" "${arg}"
     fi
     sep=" "
   done
@@ -46,17 +46,17 @@ inspect_args() {
 IFS=$'\n' read -d '' -r -a lines < "${!_STUB_PLAN}" || true
 index=0
 for line in "${lines[@]}"; do
-  index=$(($index + 1))
+  index=$((${index} + 1))
 
-  if [[ -z "${!_STUB_END}" && -n "${!_STUB_NOINDEX}" || $index -eq "${!_STUB_INDEX}" ]]; then
+  if [[ -z "${!_STUB_END}" && -n "${!_STUB_NOINDEX}" || ${index} -eq "${!_STUB_INDEX}" ]]; then
     # We found the plan line we're interested in.
     # Start off by assuming success.
     result=0
 
     # Split the line into an array of arguments to
     # match and a command to run to produce output.
-    command=" $line"
-    if [ "$command" != "${command/ : }" ]; then
+    command=" ${line}"
+    if [ "${command}" != "${command/ : }" ]; then
       patterns="${command%% : *}"
       command="${command#* : }"
     fi
@@ -65,27 +65,27 @@ for line in "${lines[@]}"; do
     # In the future, use a sed script to split while
     # respecting quoting.
     set -f
-    patterns=($patterns)
+    patterns=(${patterns})
     set +f
     arguments=("$@")
 
     # Match the expected argument patterns to actual
     # arguments.
     for (( i=0; i<${#patterns[@]}; i++ )); do
-      pattern="${patterns[$i]}"
-      argument="${arguments[$i]}"
+      pattern="${patterns[${i}]}"
+      argument="${arguments[${i}]}"
 
-      case "$argument" in
-        $pattern ) ;;
+      case "${argument}" in
+        ${pattern} ) ;;
         * ) result=1 ;;
       esac
     done
 
     # If the arguments matched, evaluate the command
     # in a subshell. Otherwise, log the failure.
-    if [ $result -eq 0 ] ; then
+    if [ "${result}" -eq 0 ] ; then
       set +e
-      ( eval "$command" )
+      ( eval "${command}" )
       status="$?"
       set -e
       [ -z "${!_STUB_NOINDEX}" ] || break
@@ -102,7 +102,7 @@ if [ -n "${!_STUB_END}" ]; then
 
   # If the number of lines in the plan is larger than
   # the requested index, we failed.
-  if [ $index -ge "${!_STUB_INDEX}" ]; then
+  if [ "${index}" -ge "${!_STUB_INDEX}" ]; then
     eval "${_STUB_RESULT}"=1
   fi
 
@@ -112,7 +112,7 @@ if [ -n "${!_STUB_END}" ]; then
 else
   # If the requested index is larger than the number
   # of lines in the plan file, we failed.
-  if [[ -z "${!_STUB_NOINDEX}" && "${!_STUB_INDEX}" -gt $index ]]; then
+  if [[ -z "${!_STUB_NOINDEX}" && "${!_STUB_INDEX}" -gt ${index} ]]; then
     eval "${_STUB_RESULT}"=1
   fi
 
@@ -121,6 +121,6 @@ else
     echo "${_STUB_RESULT}=${!_STUB_RESULT}"
   } > "${!_STUB_RUN}"
 
-  exit "$status"
+  exit "${status}"
 
 fi
