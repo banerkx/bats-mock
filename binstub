@@ -27,6 +27,7 @@ eval "${_STUB_RESULT}"=0
 [ ! -e "${!_STUB_RUN}" ] || source "${!_STUB_RUN}"
 
 # Expose this for stub scripts.
+# shellcheck disable=SC2317
 inspect_args() {
   local arg
   local sep=''
