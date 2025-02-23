@@ -14,10 +14,11 @@ _STUB_END="${PROGRAM}_STUB_END"
 _STUB_DEBUG="${PROGRAM}_STUB_DEBUG"
 
 if [ -n "${!_STUB_DEBUG}" ]; then
-  echo "${program}" "$@" >&${!_STUB_DEBUG}
+  echo "${program}" "$@" >&"${!_STUB_DEBUG}"
 fi
 
 [ -e "${!_STUB_PLAN}" ] || exit 1
+# shellcheck disable=SC2154
 [ -n "${!_STUB_RUN}" ] || eval "${_STUB_RUN}"="${BATS_MOCK_TMPDIR}/${program}-stub-run"
 
 
@@ -66,7 +67,7 @@ for line in "${lines[@]}"; do
     # In the future, use a sed script to split while
     # respecting quoting.
     set -f
-    patterns=(${patterns})
+    patterns=("${patterns}")
     set +f
     arguments=("$@")
 
@@ -77,8 +78,8 @@ for line in "${lines[@]}"; do
       argument="${arguments[${i}]}"
 
       case "${argument}" in
-        ${pattern} ) ;;
-        * ) result=1 ;;
+        "${pattern}" ) ;;
+        *            ) result=1 ;;
       esac
     done
 
